@@ -78,11 +78,12 @@ router.post("/assign", (req, res, next) => {
 
 // Junior Eng
 router.get("/jeng", ensureAuthenticated, async (req, res, next) => {
-  const complinet = await Complaint.find();
-  const query = await Complaint.findOne({ username: req.username });
-  console.log(req.username);
-  console.log(complinet);
-  console.log(query);
+  const query = await ComplaintMapping.find({
+    engineerName: req.username,
+  });
+
+  const story = await query.populate("Complaints").exec();
+  console.log(story);
   res.render("junior/junior", { complaints: complinet });
 });
 
@@ -232,8 +233,9 @@ router.post(
       if (req.user.role === "admin") {
         res.redirect("/admin");
       } else if (req.user.role === "jeng") {
-        req.username = req.user.username;
-        res.redirect("/jeng");
+        const username = req.user.username;
+
+        res.redirect(`/jeng?username=${username}`);
       } else {
         res.redirect("/");
       }
@@ -244,7 +246,9 @@ router.post(
 // Access Control
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
-    return next();
+    req.username = req.query.username;
+
+    next();
   } else {
     req.flash("error_msg", "You are not Authorized to view this page");
     res.redirect("/login");
