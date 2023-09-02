@@ -81,9 +81,7 @@ router.get("/jeng", ensureAuthenticated, async (req, res, next) => {
   const query = await ComplaintMapping.find({
     engineerName: req.username,
   });
-
-  const story = await query.populate("Complaints").exec();
-  console.log(story);
+  const complinet = await Complaint.find();
   res.render("junior/junior", { complaints: complinet });
 });
 
