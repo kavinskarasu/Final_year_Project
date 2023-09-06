@@ -143,10 +143,9 @@ router.post("/registerComplaint", (req, res, next) => {
 
 router.delete("/solved/:id", async (req, res) => {
   console.log(req.params.id);
-  const data = await ComplaintMapping.findById(req.params.id);
+  const data = await ComplaintMapping.findByIdAndDelete(req.params.id);
   const user = await Complaint.findById(data.complaintID);
-  console.log(data);
-  console.log(user);
+
   sendMail(user);
   res.status(204).json({
     status: "succes",
