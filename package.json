@@ -25,6 +25,7 @@
     "express-session": "*",
     "express-validator": "*",
     "mongoose": "*",
+    "nodemailer": "^6.9.5",
     "passport": "*",
     "passport-http": "*",
     "passport-local": "*"

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-
+const nodemailer = require("nodemailer");
 let User = require("../models/user");
 let Complaint = require("../models/complaint");
 let ComplaintMapping = require("../models/complaint-mapping");
@@ -85,11 +85,13 @@ router.get("/jeng", ensureAuthenticated, async (req, res, next) => {
 
   const data = await Promise.all(
     query.map(async (com) => {
-      const res = await Complaint.findById(com.complaintID);
-      return res;
+      const result = await Complaint.findById(com.complaintID);
+      const obj = result.toObject();
+      const id = com._id;
+      return { ...obj, id };
     })
   );
-
+  console.log(data);
   const complinet = await Complaint.find();
   res.render("junior/junior", { complaints: data });
 });
@@ -138,6 +140,18 @@ router.post("/registerComplaint", (req, res, next) => {
   }
 });
 
+router.delete("/solved/:id", async (req, res) => {
+  console.log(req.params.id);
+  const data = await ComplaintMapping.findById(req.params.id);
+  const user = await Complaint.findById(data.complaintID);
+  console.log(data);
+  console.log(user);
+  sendMail(user);
+  res.status(204).json({
+    status: "succes",
+    data: "data deleted Successfully",
+  });
+});
 // Process Register
 router.post("/register", (req, res, next) => {
   const name = req.body.name;
@@ -261,4 +275,32 @@ function ensureAuthenticated(req, res, next) {
   }
 }
 
+function sendMail(user) {
+  // Create a transporter using your Gmail account
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "kavinskarasus@gmail.com",
+      pass: "ohtbcxrxsprzsyse",
+    },
+  });
+
+  // Define the email data
+  const mailOptions = {
+    from: "kavinskarasus@gmail.com",
+    to: "kaviarasu.ct20@bitsathy.ac.in",
+    subject: "Complient Resolved",
+    text: `${user.desc} reference id:  ${user._id}
+    Thansk for Contacting us .`,
+  };
+
+  // Send the email
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error("Error sending email:", error);
+    } else {
+      console.log("Email sent:", info.response);
+    }
+  });
+}
 module.exports = router;

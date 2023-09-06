@@ -1,4 +1,12 @@
-<table class="table table-bordered">
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script  src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+</head>
+<body>
+  <table class="table table-bordered">
   <thead class="table-success">
     <tr>
       <th scope="col">ID</th>
@@ -14,7 +22,31 @@
         <td>{{name}}</td>
         <td>{{contact}}</td>
         <td>{{desc}}</td>
+        <td><button onclick=get("{{id}}")>Resloved</button></td>
     {{/each}}
 
   </tbody>
 </table>
+<script>
+
+  function get(id){
+    
+    axios.delete(`/solved/${id}`)
+  .then(function (response) {
+    // handle success
+    console.log(response);
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+  .finally(function () {
+    // always executed
+  });
+  }
+  
+
+</script>
+</body>
+</html>
+
