@@ -3,10 +3,11 @@ const router = express.Router();
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const nodemailer = require("nodemailer");
+const dotenv = require("dotenv");
 let User = require("../models/user");
 let Complaint = require("../models/complaint");
 let ComplaintMapping = require("../models/complaint-mapping");
-
+dotenv.config();
 // Home Page - Dashboard
 router.get("/", ensureAuthenticated, (req, res, next) => {
   res.render("index");
@@ -280,8 +281,8 @@ function sendMail(user) {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: "kavinskarasus@gmail.com",
-      pass: "ohtbcxrxsprzsyse",
+      user: process.env.user,
+      pass: process.env.pass,
     },
   });
 
