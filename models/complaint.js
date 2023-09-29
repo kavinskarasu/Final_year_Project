@@ -18,6 +18,10 @@ const ComplaintSchema = mongoose.Schema({
   desc: {
     type: String,
   },
+  phone: {
+    type: String,
+    max: 10,
+  },
   status: {
     type: String,
     default: "Pending",

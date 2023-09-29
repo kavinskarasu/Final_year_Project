@@ -13,6 +13,7 @@
       <th scope="col">Customer Name</th>
       <th scope="col">Customer Contact</th>
       <th scope="col">Description</th>
+      <th scope="col">Status</th>
     </tr>
   </thead>
   <tbody>
@@ -34,7 +35,9 @@
     axios.delete(`/solved/${id}`)
   .then(function (response) {
     // handle success
+
     console.log(response);
+     location.reload();
   })
   .catch(function (error) {
     // handle error

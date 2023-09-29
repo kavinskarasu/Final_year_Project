@@ -101,8 +101,9 @@ router.get("/jeng", ensureAuthenticated, async (req, res, next) => {
 router.get("/complaint", ensureAuthenticated, (req, res, next) => {
   //console.log(req.session.passport.username);
   //console.log(user.name);
+  console.log(req.user);
   res.render("complaint", {
-    username: req.session.user,
+    user: req.user,
   });
 });
 
@@ -147,6 +148,7 @@ router.delete("/solved/:id", async (req, res) => {
   const user = await Complaint.findById(data.complaintID);
 
   sendMail(user);
+
   res.status(204).json({
     status: "succes",
     data: "data deleted Successfully",
@@ -160,6 +162,7 @@ router.post("/register", (req, res, next) => {
   const password = req.body.password;
   const password2 = req.body.password2;
   const role = req.body.role;
+  const phone = req.body.phone;
 
   req.checkBody("name", "Name field is required").notEmpty();
   req.checkBody("email", "Email field is required").notEmpty();
@@ -184,6 +187,7 @@ router.post("/register", (req, res, next) => {
       email: email,
       password: password,
       role: role,
+      phone,
     });
 
     User.registerUser(newUser, (err, user) => {
@@ -303,4 +307,20 @@ function sendMail(user) {
     }
   });
 }
+
+router.post("/getComplinet", async (req, res) => {
+  console.log(req.body);
+  try {
+    const getComplinet = await Complaint.find({ email: req.body.email });
+    res.status(200).json({
+      status: "true",
+      data: getComplinet,
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: false,
+      err,
+    });
+  }
+});
 module.exports = router;
