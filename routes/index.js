@@ -290,9 +290,10 @@ function sendMail(user) {
   });
 
   // Define the email data
+  console.log(user.email);
   const mailOptions = {
     from: "kavinskarasus@gmail.com",
-    to: "kaviarasu.ct20@bitsathy.ac.in",
+    to: user.email,
     subject: "Complient Resolved",
     text: `${user.desc} reference id:  ${user._id}
     Thansk for Contacting us .`,
