@@ -148,7 +148,7 @@ router.delete("/solved/:id", async (req, res) => {
   const user = await Complaint.findById(data.complaintID);
 
   sendMail(user);
-
+  await Complaint.findByIdAndDelete(data.complaintID);
   res.status(204).json({
     status: "succes",
     data: "data deleted Successfully",
